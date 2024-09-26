@@ -1,63 +1,28 @@
 const express = require('express');
-
-const { readFile } = require('fs');
+const countStudents = require('./3-read_file_async');
 
 const app = express();
 const port = 1245;
-
-function countStudents(fileName) {
-  const students = {};
-  const fields = {};
-  let length = 0;
-  return new Promise((resolve, reject) => {
-    readFile(fileName, (err, data) => {
-      if (err) {
-        reject(err);
-      } else {
-        let output = '';
-        const lines = data.toString().split('\n');
-        for (let i = 0; i < lines.length; i += 1) {
-          if (lines[i]) {
-            length += 1;
-            const field = lines[i].toString().split(',');
-            if (Object.prototype.hasOwnProperty.call(students, field[3])) {
-              students[field[3]].push(field[0]);
-            } else {
-              students[field[3]] = [field[0]];
-            }
-            if (Object.prototype.hasOwnProperty.call(fields, field[3])) {
-              fields[field[3]] += 1;
-            } else {
-              fields[field[3]] = 1;
-            }
-          }
-        }
-        const l = length - 1;
-        output += `Number of students: ${l}\n`;
-        for (const [key, value] of Object.entries(fields)) {
-          if (key !== 'field') {
-            output += `Number of students in ${key}: ${value}. `;
-            output += `List: ${students[key].join(', ')}\n`;
-          }
-        }
-        resolve(output);
-      }
-    });
-  });
-}
+const database = process.argv[2] ? process.argv[2] : '';
 
 app.get('/', (req, res) => {
   res.send('Hello Holberton School!');
 });
-app.get('/students', (req, res) => {
-  countStudents(process.argv[2].toString()).then((output) => {
-    res.send(['This is the list of our students', output].join('\n'));
-  }).catch(() => {
-    res.send('This is the list of our students\nCannot load the database');
-  });
+
+app.get('/students', async (req, res) => {
+  const pre = 'This is the list of our students\n';
+  let data;
+  res.header('Content-Type', 'text/plain');
+  try {
+    data = await countStudents(database);
+    res.send(`${pre}${data.join('\n')}`);
+  } catch (err) {
+    res.send(`${pre}${err.message}`);
+  }
 });
 
 app.listen(port, () => {
+  console.log(`Running on http://127.0.0.1:${port}`);
 });
 
 module.exports = app;

@@ -1,11 +1,9 @@
-/* eslint-disable array-callback-return */
-export default function hasValuesFromArray(set, list) {
-  let verdict = true;
-  list.map((x) => {
-    if (!set.has(x)) {
-      verdict = false;
+export default function hasValuesFromArray(set, array) {
+  const set2 = new Set(array);
+  for (const elem of set2) {
+    if (!set.has(elem)) {
+      return false;
     }
-  });
-
-  return verdict;
+  }
+  return true;
 }

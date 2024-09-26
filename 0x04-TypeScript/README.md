@@ -1,1 +1,1 @@
-# Solutions to tasks on Typescript
+# Files and their functions

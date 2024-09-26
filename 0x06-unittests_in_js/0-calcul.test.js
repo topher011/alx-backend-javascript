@@ -1,22 +1,44 @@
-const calculateNumber = require("./0-calcul.js");
 const assert = require('assert');
 
-describe('calculateNumber', () => {
-    it('rounding of a', () => {
-        assert.equal(calculateNumber(15.78, 2), 18);
-        assert.equal(calculateNumber(1.2, 0), 1);
-        assert.equal(calculateNumber(3.5, 2), 6);
+const calculateNumber = require('./0-calcul');
+
+describe('tests the functionality of calculateNumber:', () => {
+  describe('test using two integers:', () => {
+    it('should equal 5', () => {
+      assert.strictEqual(calculateNumber(3, 2), 5);
+    });
+  });
+
+  describe('test using two float values:', () => {
+    it('should equal 5', () => {
+      assert.strictEqual(calculateNumber(2.2, 3.4), 5);
+    });
+  });
+
+  describe('test using one float value and one integer:', () => {
+    it('should equal 4', () => {
+      assert.strictEqual(calculateNumber(1.8, 2), 4);
+    });
+  });
+
+  describe('test using one float value and one integer rev positions:',
+    () => {
+      it('should equal 4', () => {
+        assert.strictEqual(calculateNumber(2, 1.8), 4);
+      });
     });
 
-    it('rounding of b', () => {
-        assert.equal(calculateNumber(2, 15.78), 18);
-        assert.equal(calculateNumber(0, 1.2), 1);
-        assert.equal(calculateNumber(2, 3.5), 6);
+  describe('test using one float value rounded down and one integer:',
+    () => {
+      it('should equal 3', () => {
+        assert.strictEqual(calculateNumber(2, 1.2), 3);
+      });
     });
 
-    it('suming of a and b', () => {
-        assert.equal(calculateNumber(15.78, 2.5), 19);
-        assert.equal(calculateNumber(1.2, 0.2), 1);
-        assert.equal(calculateNumber(3.5, 2.7), 7);
+  describe('test using one float value a rounded down and one integer:',
+    () => {
+      it('should equal 4', () => {
+        assert.strictEqual(calculateNumber(1.3, 3), 4);
+      });
     });
-})
+});

@@ -1,40 +1,37 @@
-const { readFile } = require('fs');
+const fs = require('fs');
 
-function countStudents(fileName) {
-  const students = {};
-  const fields = {};
-  let length = 0;
+function countStudents(path) {
   return new Promise((resolve, reject) => {
-    readFile(fileName, (error, data) => {
-      if (error) {
-        reject(Error('Cannot load the database'));
-      } else {
-        const lines = data.toString().split('\n');
-        for (let i = 0; i < lines.length; i += 1) {
-          if (lines[i]) {
-            length += 1;
-            const field = lines[i].toString().split(',');
-            if (Object.prototype.hasOwnProperty.call(students, field[3])) {
-              students[field[3]].push(field[0]);
-            } else {
-              students[field[3]] = [field[0]];
-            }
-            if (Object.prototype.hasOwnProperty.call(fields, field[3])) {
-              fields[field[3]] += 1;
-            } else {
-              fields[field[3]] = 1;
-            }
-          }
-        }
-        const l = length - 1;
-        console.log(`Number of students: ${l}`);
-        for (const [key, value] of Object.entries(fields)) {
-          if (key !== 'field') {
-            console.log(`Number of students in ${key}: ${value}. List: ${students[key].join(', ')}`);
-          }
-        }
-        resolve(data);
+    fs.readFile(path, 'utf8', (err, data) => {
+      if (data === undefined || err) {
+        reject(new Error('Cannot load the database'));
+        return;
       }
+      const resp = [];
+      let lines = data.toString().split(/\r\n|\n/);
+      lines = lines.filter((item) => item !== '');
+      lines = lines.map((item) => item.split(','));
+      const numberOfStudents = lines.length ? lines.length - 1 : 0;
+      let msg = `Number of students: ${numberOfStudents}`;
+      console.log(msg);
+      resp.push(msg);
+      const fields = {};
+      for (let i = 1; i < lines.length; i += 1) {
+        const line = lines[i];
+        const field = line[line.length - 1];
+        if (field in fields) {
+          fields[field].push(line[0]);
+        } else {
+          fields[field] = [line[0]];
+        }
+      }
+      for (const [key, value] of Object.entries(fields)) {
+        msg = `Number of students in ${key}: ${value.length}.\
+ List: ${value.join(', ')}`;
+        console.log(msg);
+        resp.push(msg);
+      }
+      resolve(resp);
     });
   });
 }

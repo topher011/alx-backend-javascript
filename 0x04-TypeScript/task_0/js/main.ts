@@ -1,42 +1,40 @@
-// Write an interface named Student that accepts the following elements: firstName(string), lastName(string), age(number), and location(string)
-// Create two students, and create an array named studentsList containing the two variables
-// Using Vanilla Javascript, render a table and for each elements in the array, append a new row to the table
-// Each row should contain the first name of the student and the location
-
-// Define the Student interface
 interface Student {
-	firstName: string;
-	lastName: string;
-	age: number;
-	location: string;
+  firstName: string;
+  lastName: string;
+  age: number;
+  location: string;
 }
 
-// Create two student objects
-const firstStudent: Student = {
-	firstName: "Obed",
-	lastName: "Ehoneah",
-	age: 97,
-	location: "Accra"
+let user1: Student = {
+      firstName: "Shobi",
+      lastName: "Ola-Adisa",
+      age: 21,
+      location: "Somewhere"
 }
 
-const secondStudent: Student = {
-	firstName: "Frank",
-	lastName: "Ehoneah",
-	age: 79,
-	location: "Kumasi"
+let user2: Student = {
+      firstName: "John",
+      lastName: "Doe",
+      age: 30,
+      location: "Here"
 }
 
-// Create an array of students
-const studentsList = [firstStudent, secondStudent];
+let studentsList = [user1, user2];
+let table = document.createElement('table');
+let tbody = document.createElement('tbody');
 
-const table = document.getElementById('studentTable') as HTMLTableElement;
+table.appendChild(tbody);
+document.body.appendChild(table);
 
-// Create a new row for each student and append it to the table
-studentsList.forEach((student) => {
-	const row = table.insertRow();
-	const firstNameCell = row.insertCell(0);
-	const locationCell = row.insertCell(1);
+studentsList.map((item: Student) => {
+    let tr = document.createElement('tr');
+    tbody.appendChild(tr);
+    let td_name = document.createElement('td');
+    td_name.innerHTML = item.firstName;
+    tr.appendChild(td_name);
+    let td_location = document.createElement('td');
+    td_location.innerHTML = item.location;
+    tr.appendChild(td_location);
 
-	firstNameCell.innerHTML = student.firstName;
-	locationCell.innerHTML = student.location;
-})
+    return tr;
+});
